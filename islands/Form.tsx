@@ -1,7 +1,6 @@
 import { useState } from "preact/hooks";
 import { FunctionComponent } from "preact";
 import { JSX } from "preact";
-import axios from "npm:axios";
 
 type Definition = {
   definition: string;
@@ -34,13 +33,16 @@ const Form: FunctionComponent = () => {
     }
     try {
       const url = `https://api.dictionaryapi.dev/api/v2/entries/en_US/${word}`;
-      const res = await axios.get<ApiResponse>(url);
-      if (res.data.length === 0) {
+      // const res = await axios.get<ApiResponse>(url);
+      const res = await fetch(url);
+      const data: ApiResponse = await res.json();
+      if (data.length === 0 || res.status === 404) {
         setDefinitions([]);
+        setWordSearched(word);
         return;
       }
       const aux: Definition[] = [];
-      res.data.forEach((e) =>
+      data.forEach((e) =>
         e?.meanings.forEach((meaning) =>
           meaning.definitions.forEach((def) => {
             const { definition, example } = def;
@@ -52,6 +54,8 @@ const Form: FunctionComponent = () => {
       setDefinitions(aux);
     } catch (e) {
       setDefinitions([]);
+      console.error(e.message);
+      setError(e.message);
     }
     setWordSearched(word);
   };
