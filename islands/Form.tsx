@@ -8,11 +8,12 @@ type Meaning = {
   definitions: Definition[];
 };
 
-type ApiResponse = [
-  {
-    meanings: Meaning[];
-  }?,
-];
+type Entry = {
+  meanings: Meaning[];
+  word: string;
+};
+
+type ApiResponse = Entry[];
 
 const Form: FunctionComponent = () => {
   const [word, setWord] = useState<string>("");
@@ -30,7 +31,6 @@ const Form: FunctionComponent = () => {
     }
     try {
       const url = `https://api.dictionaryapi.dev/api/v2/entries/en_US/${word}`;
-      // const res = await axios.get<ApiResponse>(url);
       const res = await fetch(url);
       const data: ApiResponse = await res.json();
       if (data.length === 0 || res.status === 404) {
@@ -39,8 +39,9 @@ const Form: FunctionComponent = () => {
         return;
       }
       const aux: Definition[] = [];
+
       data.forEach((e) =>
-        e?.meanings.forEach((meaning) =>
+        e.meanings.forEach((meaning) =>
           meaning.definitions.forEach((def) => {
             const { definition, example } = def;
             if (example === undefined) aux.push({ definition });
@@ -48,13 +49,14 @@ const Form: FunctionComponent = () => {
           })
         )
       );
+      setWordSearched(data[0].word);
       setDefinitions(aux);
     } catch (e) {
       setDefinitions([]);
       console.error(e.message);
       setError(e.message);
+      setWordSearched(word);
     }
-    setWordSearched(word);
   };
 
   return (
