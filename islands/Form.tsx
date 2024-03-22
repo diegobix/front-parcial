@@ -1,11 +1,8 @@
 import { useState } from "preact/hooks";
 import { FunctionComponent } from "preact";
 import { JSX } from "preact";
-
-type Definition = {
-  definition: string;
-  example?: string;
-};
+import { Definition } from "../types.ts";
+import Definiciones from "./Definiciones.tsx";
 
 type Meaning = {
   definitions: Definition[];
@@ -80,31 +77,7 @@ const Form: FunctionComponent = () => {
         {error.length !== 0 && <p class="error">{error}</p>}
       </div>
       {wordSearched.length !== 0 && (
-        <div class="definiciones">
-          <h3>{wordSearched}</h3>
-          <ul>
-            {definitions.map((def, i) => (
-              <li key={i}>
-                <p>
-                  <span>
-                    <strong>Definition:</strong>
-                    <br />
-                  </span>
-                  <span>{def.definition}</span>
-                </p>
-                {def.example && (
-                  <p>
-                    <span>
-                      <strong>Example:</strong>
-                      <br />
-                    </span>
-                    <span>{def.example}</span>
-                  </p>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <Definiciones wordSearched={wordSearched} definitions={definitions} />
       )}
     </>
   );

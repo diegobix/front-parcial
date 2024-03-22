@@ -8,6 +8,7 @@ import * as $_layout from "./routes/_layout.tsx";
 import * as $index from "./routes/index.tsx";
 import * as $wordcsr from "./routes/wordcsr.tsx";
 import * as $wordssr from "./routes/wordssr.tsx";
+import * as $Definiciones from "./islands/Definiciones.tsx";
 import * as $Form from "./islands/Form.tsx";
 import { type Manifest } from "$fresh/server.ts";
 
@@ -21,6 +22,7 @@ const manifest = {
     "./routes/wordssr.tsx": $wordssr,
   },
   islands: {
+    "./islands/Definiciones.tsx": $Definiciones,
     "./islands/Form.tsx": $Form,
   },
   baseUrl: import.meta.url,
